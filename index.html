@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WYSIWYG Enterprise Editor - CKEditor 5 / TinyMCE Enterprise Parity</title>
+  
+  <!-- Editor Stylesheet -->
+  <link rel="stylesheet" href="editor.css">
+
+  <style>
+    /* Demo Page Container Styling */
+    :root {
+      --bg-page: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --border-demo: #e2e8f0;
+      --accent: #2563eb;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0b0f19;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --border-demo: #334155;
+      --accent: #3b82f6;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-page);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      transition: background-color 200ms ease, color 200ms ease;
+    }
+
+    .demo-wrapper {
+      max-width: 1240px;
+      margin: 32px auto;
+      padding: 0 20px;
+    }
+
+    /* Header Bar */
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .demo-title-group h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      background-color: var(--accent);
+      color: #ffffff;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .demo-subtitle {
+      margin: 4px 0 0 0;
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    /* Live Strategy & Environment Control Panel */
+    .demo-control-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border-demo);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .control-group select,
+    .control-group button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-demo);
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .control-group select:hover,
+    .control-group button:hover {
+      border-color: var(--accent);
+    }
+
+    .control-group button.primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+    }
+
+    /* Inspector Grid */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    /* Clean HTML Inspector Card */
+    .inspector-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-demo);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
+    .inspector-header {
+      padding: 12px 18px;
+      background: rgba(0,0,0,0.02);
+      border-bottom: 1px solid var(--border-demo);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .inspector-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .inspector-actions button {
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border-demo);
+      background: var(--card-bg);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .inspector-actions button:hover {
+      background: var(--border-demo);
+    }
+
+    .inspector-code {
+      margin: 0;
+      padding: 16px;
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      max-height: 280px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* Toast Notification */
+    .demo-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="demo-wrapper">
+    <!-- Header -->
+    <header class="demo-header">
+      <div class="demo-title-group">
+        <h1>WYSIWYG Enterprise <span class="demo-badge">CKEditor 5 & TinyMCE Parity</span></h1>
+        <p class="demo-subtitle">Zero-Dependency, Configuration-Driven Modern Vanilla JavaScript (ES6+) Rich-Text Engine</p>
+      </div>
+
+      <div class="control-group">
+        <label for="themeSelect">Theme:</label>
+        <select id="themeSelect">
+          <option value="light">Light Theme</option>
+          <option value="dark">Dark Theme</option>
+        </select>
+
+        <button id="btnDirToggle">RTL / LTR</button>
+        <button id="btnReadOnly">Toggle ReadOnly</button>
+      </div>
+    </header>
+
+    <!-- Strategy & Configuration Controller -->
+    <section class="demo-control-panel">
+      <div class="control-group">
+        <label for="uploadStrategySelect"><strong>Image Strategy:</strong></label>
+        <select id="uploadStrategySelect">
+          <option value="base64">Base64 (Canvas Compression to WebP)</option>
+          <option value="server">Async Server Upload (Visual Progress %)</option>
+          <option value="customUrl">Custom URL Modal (Mandatory ALT + Lazy)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <button id="btnLoadDocPreset" class="primary">Load Enterprise Sample Content</button>
+        <button id="btnSimulateWordPaste">Test Word/Google Docs Cleaner</button>
+        <button id="btnTriggerAI" style="border-color:#8b5cf6; color:#8b5cf6; font-weight:600;">✨ Test AI Assistant</button>
+        <button id="btnExportMarkdown" style="border-color:#0284c7; color:#0284c7; font-weight:600;">📥 Export Markdown</button>
+      </div>
+    </section>
+
+    <!-- WYSIWYG Editor Mount Point -->
+    <div id="editor-container"></div>
+
+    <div style="height: 24px;"></div>
+
+    <!-- Strict Clean HTML Inspector -->
+    <div class="inspector-card">
+      <div class="inspector-header">
+        <span>Strict HTML Sanitizer Output (getCleanHTML() AST Pipeline)</span>
+        <div class="inspector-actions">
+          <button id="btnCopyHtml">Copy Clean HTML</button>
+          <button id="btnRefreshInspector">Refresh</button>
+        </div>
+      </div>
+      <pre class="inspector-code" id="inspectorOutput">Waiting for editor changes...</pre>
+    </div>
+  </div>
+
+  <div class="demo-toast" id="toast">Notification</div>
+
+  <!-- Scripts -->
+  <script src="editor.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Initialize WYSIWYG using external editor.config.json
+      const editor = await window.WYSIWYG.init('#editor-container', './editor.config.json');
+
+      const inspectorOutput = document.getElementById('inspectorOutput');
+      const themeSelect = document.getElementById('themeSelect');
+      const uploadStrategySelect = document.getElementById('uploadStrategySelect');
+      const btnDirToggle = document.getElementById('btnDirToggle');
+      const btnReadOnly = document.getElementById('btnReadOnly');
+      const btnLoadDocPreset = document.getElementById('btnLoadDocPreset');
+      const btnSimulateWordPaste = document.getElementById('btnSimulateWordPaste');
+      const btnCopyHtml = document.getElementById('btnCopyHtml');
+      const btnRefreshInspector = document.getElementById('btnRefreshInspector');
+      const toast = document.getElementById('toast');
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2500);
+      }
+
+      // Format clean HTML for the live inspector
+      function updateInspector() {
+        const clean = editor.getCleanHTML();
+        inspectorOutput.textContent = clean || '<!-- Canvas is empty -->';
+      }
+
+      editor.events.on('change', () => {
+        updateInspector();
+      });
+
+      // 2. Load Enterprise Document Sample Content
+      function loadEnterpriseContent() {
+        const enterpriseDoc = `
+          <h2>Architecture Blueprint: Next-Generation Editor Engine</h2>
+          <p>This editor framework is engineered strictly in <strong>Vanilla JavaScript (ES6+)</strong> without a single external dependency, delivering the performance and interactive UX fidelity of <em>CKEditor 5 Enterprise</em> and <em>TinyMCE</em>.</p>
+          
+          <figure class="wysiwyg-image align-center" data-align="center">
+            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&auto=format&fit=crop&q=80" alt="High performance software code screen" loading="lazy" style="width: 680px;" />
+            <figcaption contenteditable="true">Interactive Figure: Click to reveal corner resize handles and contextual floating toolbar.</figcaption>
+          </figure>
+
+          <h3>Key Architectural Highlights</h3>
+          <ul>
+            <li><strong>Multi-Strategy Image Pipeline:</strong> Async Server Upload with real-time percentage progress, Client-side Canvas WebP compression, and WCAG-compliant Custom URL Modals.</li>
+            <li><strong>Contextual Balloon & Floating Toolbars:</strong> Inline text selection popovers, image floating alignment palettes, and table modification toolbars.</li>
+            <li><strong>Word & Google Docs Purification:</strong> Cleans messy <code>MsoNormal</code>, conditional XML tags, redundant styles, and extracts pristine semantic HTML.</li>
+          </ul>
+
+          <blockquote>
+            "Clean abstractions, zero bloat, and resilient DOM manipulation ensure enterprise-grade reliability across all modern browser engines."
+          </blockquote>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Feature Module</th>
+                <th>Strategy Implementation</th>
+                <th>Compliance Standard</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Sanitization</strong></td>
+                <td>Recursive DOM AST Purifier</td>
+                <td>Strict Whitelist / Anti-XSS</td>
+              </tr>
+              <tr>
+                <td><strong>Image Pipeline</strong></td>
+                <td>Server, Base64 WebP, Custom URL</td>
+                <td>WCAG 2.1 AA (Mandatory ALT)</td>
+              </tr>
+              <tr>
+                <td><strong>Table Engine</strong></td>
+                <td>10x10 Matrix & Contextual Row/Col</td>
+                <td>Semantic HTML5 Table Specs</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>Try selecting text anywhere in this document to invoke the <strong>Floating Balloon Toolbar</strong>, or drop an image file directly onto the canvas!</p>
+        `;
+
+        editor.setHTML(enterpriseDoc);
+        updateInspector();
+      }
+
+      loadEnterpriseContent();
+
+      // Theme Controller
+      themeSelect.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        document.documentElement.setAttribute('data-theme', theme);
+        editor.setTheme(theme);
+        showToast(`Switched to ${theme} theme`);
+      });
+
+      // Image Strategy Controller
+      uploadStrategySelect.addEventListener('change', (e) => {
+        const strategy = e.target.value;
+        editor.config.image.uploadStrategy = strategy;
+        const imgPlugin = editor.plugins.get('image');
+        if (imgPlugin) imgPlugin.config.uploadStrategy = strategy;
+        showToast(`Image strategy switched to: ${strategy}`);
+      });
+
+      // RTL / LTR Toggle
+      let currentDir = 'ltr';
+      btnDirToggle.addEventListener('click', () => {
+        currentDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
+        editor.setDirection(currentDir);
+        showToast(`Direction toggled to ${currentDir.toUpperCase()}`);
+      });
+
+      // ReadOnly Toggle
+      let isReadOnly = false;
+      btnReadOnly.addEventListener('click', () => {
+        isReadOnly = !isReadOnly;
+        editor.setReadOnly(isReadOnly);
+        btnReadOnly.textContent = isReadOnly ? 'Disable ReadOnly' : 'Toggle ReadOnly';
+        showToast(`ReadOnly: ${isReadOnly ? 'ENABLED' : 'DISABLED'}`);
+      });
+
+      // Load Preset
+      btnLoadDocPreset.addEventListener('click', () => {
+        loadEnterpriseContent();
+        showToast('Enterprise sample document reloaded');
+      });
+
+      // Word / Google Docs Cleaner Test Simulation
+      btnSimulateWordPaste.addEventListener('click', () => {
+        const dirtyWordHtml = `
+          <!--[if gte mso 9]><xml><w:WordDocument><w:View>Normal</w:View></w:WordDocument></xml><![endif]-->
+          <b style="font-weight:normal;" id="docs-internal-guid-12345">
+            <h1 class="MsoNormal" style="mso-margin-top-alt:auto;font-family:Calibri;">Executive Summary from MS Word</h1>
+            <p class="MsoNormal" style="color:red;font-size:12pt;mso-fareast-font-family:'Times New Roman';">
+              <span style="font-weight:bold;">Cleaned text:</span> This content originally contained <em>MsoNormal</em> classes, proprietary styles, and invalid <code>&lt;h1&gt;</code> tags.
+            </p>
+            <script>alert("XSS Blocked")<\/script>
+          </b>
+        `;
+        const cleaned = editor.sanitizer.cleanPastePayload(dirtyWordHtml);
+        editor.insertHTMLAtCursor(cleaned);
+        showToast('Pasted & sanitized Word payload!');
+      });
+
+      // Trigger AI Assistant
+      const btnTriggerAI = document.getElementById('btnTriggerAI');
+      btnTriggerAI.addEventListener('click', () => {
+        editor.execute('aiAssistant');
+      });
+
+      // Export Markdown
+      const btnExportMarkdown = document.getElementById('btnExportMarkdown');
+      btnExportMarkdown.addEventListener('click', () => {
+        editor.execute('exportMarkdown');
+        showToast('Exported document as Markdown (.md)');
+      });
+
+      // Copy Clean HTML
+      btnCopyHtml.addEventListener('click', () => {
+        const clean = editor.getCleanHTML();
+        navigator.clipboard.writeText(clean).then(() => {
+          showToast('Clean HTML copied to clipboard!');
+        });
+      });
+
+      btnRefreshInspector.addEventListener('click', updateInspector);
+    });
+  </script>
+</body>
+</html>

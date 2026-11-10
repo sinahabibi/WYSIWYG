@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WYSIWYGEnterpriseConfig",
+  "core": {
+    "language": "ltr",
+    "placeholder": "Type or paste your enterprise content here... (Type '/' for quick commands)",
+    "readOnly": false,
+    "autoSaveIntervalMs": 10000,
+    "defaultDirection": "ltr"
+  },
+  "toolbar": {
+    "mode": "docked",
+    "sticky": true,
+    "items": [
+      "heading",
+      "|",
+      "bold",
+      "italic",
+      "underline",
+      "strikethrough",
+      "code",
+      "|",
+      "fontColor",
+      "highlight",
+      "|",
+      "alignment",
+      "|",
+      "bulletList",
+      "numberList",
+      "blockquote",
+      "|",
+      "link",
+      "insertTable",
+      "imageManager",
+      "mediaEmbed",
+      "|",
+      "ai",
+      "markdown",
+      "|",
+      "cleanFormat",
+      "undo",
+      "redo",
+      "|",
+      "sourceView",
+      "exportHtml"
+    ]
+  },
+  "balloon": {
+    "enabled": true,
+    "items": [
+      "bold",
+      "italic",
+      "underline",
+      "strikethrough",
+      "|",
+      "heading",
+      "|",
+      "link",
+      "fontColor",
+      "highlight",
+      "|",
+      "cleanFormat"
+    ]
+  },
+  "image": {
+    "uploadStrategy": "base64",
+    "server": {
+      "endpoint": "/api/v1/uploads",
+      "headers": {
+        "X-Requested-With": "XMLHttpRequest",
+        "Authorization": "Bearer mock-token-wysiwyg-enterprise"
+      },
+      "fieldName": "file"
+    },
+    "validation": {
+      "maxSizeMB": 8,
+      "allowedTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+        "image/svg+xml"
+      ]
+    },
+    "features": {
+      "allowDragDrop": true,
+      "allowClipboardPaste": true,
+      "enableResizing": true,
+      "figureCaption": true
+    },
+    "compression": {
+      "enabled": true,
+      "maxWidth": 1920,
+      "maxHeight": 1080,
+      "quality": 0.88,
+      "outputFormat": "image/webp"
+    }
+  },
+  "sanitization": {
+    "stripInlineStyles": true,
+    "disallowTags": [
+      "h1",
+      "script",
+      "style",
+      "iframe",
+      "object",
+      "embed",
+      "form",
+      "input",
+      "button",
+      "textarea",
+      "select",
+      "applet"
+    ],
+    "approvedTags": [
+      "h2",
+      "h3",
+      "h4",
+      "p",
+      "span",
+      "strong",
+      "b",
+      "em",
+      "i",
+      "u",
+      "s",
+      "strike",
+      "code",
+      "pre",
+      "blockquote",
+      "ul",
+      "ol",
+      "li",
+      "table",
+      "thead",
+      "tbody",
+      "tr",
+      "th",
+      "td",
+      "figure",
+      "figcaption",
+      "img",
+      "a",
+      "hr",
+      "br"
+    ],
+    "whitelistAttributes": {
+      "img": [
+        "src",
+        "alt",
+        "title",
+        "loading",
+        "width",
+        "height",
+        "data-align"
+      ],
+      "a": [
+        "href",
+        "target",
+        "rel",
+        "title"
+      ],
+      "figure": [
+        "class",
+        "data-align"
+      ],
+      "figcaption": [
+        "contenteditable"
+      ],
+      "td": [
+        "colspan",
+        "rowspan",
+        "data-align"
+      ],
+      "th": [
+        "colspan",
+        "rowspan",
+        "data-align"
+      ],
+      "table": [
+        "class"
+      ],
+      "p": [
+        "data-align"
+      ],
+      "h2": [
+        "data-align"
+      ],
+      "h3": [
+        "data-align"
+      ],
+      "h4": [
+        "data-align"
+      ],
+      "span": [
+        "style",
+        "class"
+      ]
+    }
+  },
+  "ui": {
+    "theme": "light",
+    "showWordCounter": true,
+    "showReadingTime": true,
+    "showCharCounter": true,
+    "readingSpeedWpm": 200,
+    "minHeight": "420px",
+    "maxHeight": "800px"
+  }
+}

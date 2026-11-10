@@ -1,0 +1,30 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JSON Configuration
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('editor.config.json', 'utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
+          echo "Configuration files validated successfully."
+
+      - name: TypeScript Definition Check
+        run: |
+          npx tsc --project tsconfig.json --noEmit
+          echo "TypeScript types are valid."
