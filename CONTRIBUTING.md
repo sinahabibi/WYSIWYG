@@ -25,8 +25,8 @@ When introducing a new feature:
 1. Fork the repository on GitHub.
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/<your-username>/wysiwyg-enterprise.git
-   cd wysiwyg-enterprise
+   git clone https://github.com/sinahabibi/WYSIWYG.git
+   cd WYSIWYG
    ```
 3. Open `index.html` in any modern web browser or run a lightweight local static server:
    ```bash

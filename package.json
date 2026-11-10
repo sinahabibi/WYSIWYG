@@ -44,14 +44,14 @@
     "markdown-shortcuts",
     "enterprise"
   ],
-  "author": "Sina",
+  "author": "Sina Habibi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sina/wysiwyg-enterprise"
+    "url": "https://github.com/sinahabibi/WYSIWYG.git"
   },
   "bugs": {
-    "url": "https://github.com/sina/wysiwyg-enterprise/issues"
+    "url": "https://github.com/sinahabibi/WYSIWYG/issues"
   },
-  "homepage": "https://github.com/sina/wysiwyg-enterprise#readme"
+  "homepage": "https://github.com/sinahabibi/WYSIWYG#readme"
 }
